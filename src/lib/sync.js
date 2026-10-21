@@ -65,7 +65,7 @@ useStore.subscribe((s, prev) => {
   if (!applying && (s.settings !== prev.settings || s.goals !== prev.goals)) localStorage.setItem(STAMP, Date.now())
 })
 
-const SYNCED = ['settings', 'goals', 'workouts', 'routines', 'diary', 'water', 'savedFoods', 'grocery', 'lists', 'recipes', 'body', 'gone']
+const SYNCED = ['settings', 'goals', 'workouts', 'routines', 'myPrograms', 'diary', 'water', 'savedFoods', 'grocery', 'lists', 'recipes', 'body', 'gone']
 const idOf = x => x.id ?? x.key
 
 function byId(a = [], b = [], gone) {
@@ -92,7 +92,7 @@ export function merge(local, remote, remotePrefsAt = 0) {
     body: perDay(local.body, remote.body, (x, y) => ({ ...y, ...x })),
     water: perDay(local.water, remote.water, (x, y) => Math.max(x, y)),
   }
-  for (const k of ['workouts', 'routines', 'savedFoods', 'grocery', 'lists', 'recipes']) out[k] = byId(local[k], remote[k], gone)
+  for (const k of ['workouts', 'routines', 'myPrograms', 'savedFoods', 'grocery', 'lists', 'recipes']) out[k] = byId(local[k], remote[k], gone)
   out.workouts.sort((x, y) => y.start - x.start)
   for (const d in out.diary) out.diary[d] = out.diary[d].filter(e => !gone[e.id])
   return out
