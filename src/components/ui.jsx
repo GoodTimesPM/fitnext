@@ -51,6 +51,9 @@ const P = {
   bookmark: 'M7 4h10v17l-5-4-5 4z',
   copy: 'M9 9h10v11H9zM5 15V4h10',
   edit: 'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',
+  up: 'M6 15l6-6 6 6',
+  down: 'M6 9l6 6 6-6',
+  swap: 'M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',
 }
 export const Icon = ({ name, size }) => (
   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={size ? { width: size, height: size } : undefined}>
