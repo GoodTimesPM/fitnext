@@ -16,7 +16,8 @@ export const useStore = create(persist((set, get) => ({
   goals: { kcal: 2400, p: 180, c: 260, f: 75, water: 8, weight: null, workouts: 4 },
   workouts: [],       // finished: { id, name, start, end, exercises: [{ exId, sets: [{ w, r, done }] }] }
   active: null,       // the workout in progress, same shape
-  routines: [],       // { id, name, exIds }
+  routines: [],       // { id, name, exIds, sets?, reps? }
+  myPrograms: [],     // built-in programs the user edited: { id (the program's), days, at }
   diary: {},          // date -> [{ id, meal, food, qty }]   food: normalized (lib/food.js)
   water: {},          // date -> glasses
   savedFoods: [],     // normalized foods
@@ -51,6 +52,10 @@ export const useStore = create(persist((set, get) => ({
   deleteWorkout: id => set(s => ({ workouts: s.workouts.filter(w => w.id !== id), gone: bury(s, id) })),
   saveRoutine: (name, exIds) => set(s => ({ routines: [...s.routines, { id: uid(), name, exIds }] })),
   deleteRoutine: id => set(s => ({ routines: s.routines.filter(r => r.id !== id), gone: bury(s, id) })),
+  updateRoutine: (id, patch) => set(s => ({ routines: s.routines.map(r => (r.id === id ? { ...r, ...patch } : r)) })),
+  // An edited program replaces the built-in one; resetting drops the edit on every device.
+  saveProgram: (id, days) => set(s => ({ myPrograms: [{ id, days, at: Date.now() }, ...s.myPrograms.filter(p => p.id !== id)], gone: unbury(s, id) })),
+  resetProgram: id => set(s => ({ myPrograms: s.myPrograms.filter(p => p.id !== id), gone: bury(s, id) })),
 
   // ---- food ----
   // qty is grams (servings for a perServing food); unit is how the user entered it: { label, g, amt }.
