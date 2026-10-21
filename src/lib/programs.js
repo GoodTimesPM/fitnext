@@ -1,3 +1,5 @@
+import { useStore } from '../store.js'
+
 // Built-in programs: a rotation of days, each a list of catalog exercise ids.
 // The user picks one in Train; Today and the desktop sidebar offer its next day.
 //   { id, name, blurb, level, perWeek, days: [{ name, exIds, sets?, reps? }] }
@@ -67,7 +69,14 @@ export const PROGRAMS = [
   ] },
 ]
 
-export const programById = id => PROGRAMS.find(p => p.id === id) || PROGRAMS[0]
+// A program as the user has it: the built-in one, or their edited days in its place.
+// Components that call this should subscribe to myPrograms so an edit redraws them.
+export function programById(id) {
+  const base = PROGRAMS.find(p => p.id === id) || PROGRAMS[0]
+  const mine = useStore.getState().myPrograms?.find(p => p.id === base.id)
+  return mine ? { ...base, days: mine.days, edited: true } : base
+}
+export const allPrograms = () => PROGRAMS.map(p => programById(p.id))
 
 // The day after the last one done from this program (by name), or the first.
 export function nextDay(program, workouts) {
@@ -77,4 +86,4 @@ export function nextDay(program, workouts) {
 }
 
 // Every program day as a startable routine, for the routine list and the global search.
-export const allDays = () => PROGRAMS.flatMap(p => p.days.map(d => ({ ...d, program: p.name })))
+export const allDays = () => allPrograms().flatMap(p => p.days.map(d => ({ ...d, program: p.name })))
