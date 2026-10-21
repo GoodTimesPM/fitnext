@@ -1,0 +1,12 @@
+# What `npx vercel` leaves out of the upload. Keys go in Vercel's settings, never as a file.
+.env
+node_modules
+dist
+release
+build
+android
+ios
+electron
+icons
+.env.local
+.vercel

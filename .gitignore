@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+release/
+build/
+electron/home.json
+electron/icon.png
+
+.vercel
+.env.local

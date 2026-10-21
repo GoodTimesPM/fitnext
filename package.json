@@ -1,0 +1,78 @@
+{
+  "name": "fitnext",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "proxy": "node --env-file-if-exists=.env server/proxy.mjs",
+    "catalogue": "node scripts/build-catalogue.mjs",
+    "app": "vite build && electron .",
+    "desktop": "node scripts/build-desktop.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "installer": "node scripts/build-desktop.mjs --installer",
+    "release": "node scripts/build-desktop.mjs --installer --publish",
+    "web": "vite build",
+    "mobile": "node scripts/build-mobile.mjs"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.6.9",
+    "@capacitor/cli": "^7.6.9",
+    "@capacitor/core": "^7.6.9",
+    "@capacitor/ios": "^7.6.9",
+    "@resvg/resvg-js": "^2.6.2",
+    "@supabase/supabase-js": "^2.118.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "electron": "^38.8.6",
+    "electron-builder": "^26.15.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "vite": "^6.3.5",
+    "zustand": "^5.0.5"
+  },
+  "description": "Workout and nutrition tracking: exercise library, workout log with PRs, food diary.",
+  "author": "Jordan Gaskins",
+  "main": "electron/main.mjs",
+  "build": {
+    "appId": "com.jordangaskins.fitnext",
+    "productName": "FitNext",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "server/**",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "FitNext",
+      "artifactName": "FitNext-Setup-${version}.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "GoodTimesPM",
+        "repo": "fitnext",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  }
+}
