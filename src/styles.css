@@ -324,6 +324,7 @@ button.li:hover { background: color-mix(in srgb, var(--sf2) 55%, transparent); }
 .import input { background: none; padding: 8px 4px; }
 .recipes { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 14px; }
 .recipe { background: var(--sf); border-radius: var(--r); box-shadow: var(--sh); overflow: hidden; text-align: left; transition: transform .2s var(--ease); animation: enter .4s var(--ease) backwards; }
+.recipe:nth-child(n+9) { animation: none; } /* only the first screenful slides in */
 .recipe:hover { transform: translateY(-3px); }
 .recipe .img { position: relative; aspect-ratio: 4 / 3; background: var(--sf2); display: grid; place-items: center; color: var(--mu); }
 .recipe .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
