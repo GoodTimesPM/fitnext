@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Icon, Seg, Sheet, Top, fmtDate, go } from '../components/ui.jsx'
 import { apiStatus, importRecipe, mealdb, recipeNutrition, recipeSearch, totals } from '../lib/food.js'
 import { guessMeal } from './Fuel.jsx'
@@ -95,12 +95,26 @@ function MyRecipes({ onOpen, onDiscover }) {
   )
 }
 
+// Cards render a page at a time as the grid scrolls into view. iPhone Safari crashed the tab
+// drawing 200 photo cards at once.
+const PAGE = 24
 export function RecipeGrid({ list, onOpen, saved }) {
+  const [shown, setShown] = useState(PAGE)
+  const more = useRef(null)
+  useEffect(() => setShown(PAGE), [list])
+  useEffect(() => {
+    const el = more.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setShown(n => n + PAGE), { rootMargin: '600px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [shown, list])
   return (
+    <>
     <div className="recipes">
-      {list.map(r => (
+      {list.slice(0, shown).map(r => (
         <button key={r.id || r.source} className="recipe" onClick={() => onOpen(r)}>
-          <div className="img">{r.image ? <img src={r.image + (r.source?.startsWith('mealdb') ? '/medium' : '')} alt="" loading="lazy" /> : <Icon name="book" />}
+          <div className="img">{r.image ? <img src={r.image + (r.source?.startsWith('mealdb') ? '/medium' : '')} alt="" loading="lazy" decoding="async" /> : <Icon name="book" />}
             {saved?.has(r.source) && <span className="pill ac saved"><Icon name="check" size={11} /> Saved</span>}
           </div>
           <div className="body">
@@ -110,6 +124,8 @@ export function RecipeGrid({ list, onOpen, saved }) {
         </button>
       ))}
     </div>
+    {shown < list.length && <div ref={more} style={{ height: 1 }} />}
+    </>
   )
 }
 
